@@ -15,22 +15,7 @@ Future versions (starting with **v0.2**) will add frontend UX elements such as t
 
 ## Quickstart
 
-```bash
-# Create and initialize the store
-app db create
-
-# Start the server (defaults to ports 8080 and 8383)
-app serve --port 8080 --admin-port 8383
-
-# Check server status (via local admin API)
-app server status
-
-# Perform a graceful restart
-app server restart
-
-# Shut down the server
-app server shutdown
-```
+See [QUICKSTART.md](QUICKSTART.md) for detailed quickstart instructions.
 
 ## Directory Layout
 
@@ -104,6 +89,8 @@ The frontend is intentionally minimal:
 ## Acknowledgment
 
 The initial design, structure, and TODO documentation for Goobergine were collaboratively created using **ChatGPT (OpenAI)** to accelerate architecture drafting and consistency across components.
+
+Ongoing development, including code style refinements, documentation updates, and TODO refactoring, was assisted by **Amp**, a powerful AI coding agent built by Sourcegraph.
 
 ## License
 

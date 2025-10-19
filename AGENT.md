@@ -14,12 +14,7 @@ The tool implements a command line interface for a web server along with command
     │   ├── linux/           # Linux (production target)
     │   └── local/           # Local development
     │
-    ├── docs/                # Documentation (Markdown, Diagrams, etc.)
-    │
-    ├── testdata/            # Data for testing the application
-    │
-    ├── tools/               # Development scripts and tools
-    │   └── ... (dev tools, bash scripts, etc.)
+    ├── public/              # Static assets and templates
     │
     ├── .gitattributes
     ├── .gitignore
@@ -27,6 +22,11 @@ The tool implements a command line interface for a web server along with command
     ├── go.work              # Development may use local repositories
     ├── LICENSE
     ├── README.md
+    ├── AGENT.md
+    ├── TODO.md
+    ├── SUMMARY_v0.1.md
+    ├── SECURITY_CONSIDERATIONS.md
+    ├── Makefile
     └── ... (CI/CD configs, etc.)
 
 ## Commands
@@ -44,14 +44,11 @@ The tool implements a command line interface for a web server along with command
 - Function comments use Go standard format `// FunctionName does X`
 - Variable naming follows camelCase
 - File structure follows standard Go package conventions
-- Use `_e`, `_i`, `_t` when declaring types
-  - Enums: use `type Enum_e int`
-  - Interface: use `type Interface_i interface {}`
-  - Struct: `type Struct_t struct {}` naming
+- Type naming follows standard Go conventions (no special suffixes)
 
-## Bash Scripts
-- Always use `${VARIABLE}` with curly braces for all variables
-- Always quote variable references: "${VARIABLE}"
+## Bash Scripts (for future tools/)
+- Use `${VARIABLE}` with curly braces for all variables
+- Quote variable references: "${VARIABLE}"
 - Use `set -e` for early exit on errors
 - Include descriptive echo statements with emoji for visual feedback
 - Test endpoints in sequence with explicit validation
