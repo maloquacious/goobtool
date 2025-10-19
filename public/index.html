@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goobergine — v0.1-alpha</title>
+  <link rel="stylesheet" href="https://unpkg.com/missing.css@1.1.1/dist/missing.min.css">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <style>
+    body { max-width: 60rem; margin: 2rem auto; }
+    .muted { opacity: 0.75; }
+    .card { padding: 1rem; border: 1px solid #ddd; border-radius: 12px; }
+  </style>
+</head>
+<body x-data="{ echoText: 'joy', response: null }">
+  <header>
+    <h1>Goobergine <small class="muted">v0.1-alpha</small></h1>
+    <p class="muted">From tabula rasa to orbis terrarum in minutes.</p>
+  </header>
+
+  <main class="card">
+    <h2>It works!</h2>
+    <p>This is the public HTML surface served from <code>/public/index.html</code>. The admin API is loopback-only and JSON-only.</p>
+
+    <section>
+      <h3>Admin echo (via HTMX)</h3>
+      <p class="muted">Requires the admin server and appropriate Accept headers; this demo uses a JSON fetch with JavaScript.</p>
+      <div>
+        <input type="text" x-model="echoText" placeholder="text to echo">
+        <button @click="
+          fetch('http://127.0.0.1:8383/admin/echo?q=' + encodeURIComponent(echoText), {
+            headers: { 'Accept': 'application/json' }
+          }).then(r => r.json()).then(j => response = j.echo).catch(err => response = String(err));
+        ">Send</button>
+        <output x-text="response ?? ''"></output>
+      </div>
+    </section>
+  </main>
+
+  <footer class="muted">
+    <small>&copy; 2025 Goobergine</small>
+  </footer>
+</body>
+</html>
