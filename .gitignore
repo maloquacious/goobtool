@@ -1,0 +1,9 @@
+*~
+*.exe
+*.gz
+*.tar
+*.tgz
+
+.code/
+.idea/
+.vscode/
