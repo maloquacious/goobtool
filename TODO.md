@@ -5,43 +5,44 @@
 [ ] Keep v0 on modules (start at v0.1-alpha; avoid v1 semantics).
 [ ] Enforce JSON-only on admin APIs; public app returns HTML.
 
-### Datastore
-[ ] Default datastore: modernc.org/sqlite (portable).
-[ ] Define storage interfaces (“Goob contracts”) so backends can be swapped later.
-[ ] SQLite safe defaults: enable WAL, synchronous=NORMAL, foreign_keys=ON.
+### Sprint 1: Basic Serve Command with Lifecycle Checks
+- [ ] Single binary provides both the server and admin CLI (initially just serve).
+- [ ] Command: app serve --port 8080 (defaults: 8080).
+- [ ] Primary listener serves the web application (initially just exits if no datastore).
+- [ ] Graceful shutdown (allow SQLite flush/close) - --shutdown-timeout=15s default.
+- [ ] Timer flag to auto-shutdown for tests.
+- [ ] Lifecycle: If no store: app serve exits with guidance ("Run: app db create").
+- [ ] Logging & Observability: Goob logging contract; default to Go std logger. Log startup/shutdown, store checks.
 
-### Backend MVP (Go server)
-[ ] Single binary provides both the server and admin CLI.
-[ ] Command: app serve --port 8080 --admin-port 8383 (defaults: 8080 / 8383).
-[ ] Primary listener serves the web application (HTML responses for HTMX).
-[ ] Secondary listener serves the admin HTTP API (loopback only, JSON-only).
-[ ] Graceful shutdown (allow SQLite flush/close).
-[ ] --shutdown-timeout=15s default.
-[ ] Timer flag to auto-shutdown for tests.
-[ ] Lifecycle:
-- [ ] If no store: app serve exits with guidance (“Run: app db create”).
-- [ ] If store exists but wrong version/uninitialized: log & serve installation app.
+### Sprint 2: Admin Channel
+- [ ] Admin HTTP API on separate listener (--admin-port, default 8383).
+- [ ] Always bind to loopback only (127.0.0.1, ::1); refuse non-loopback binds (hard error).
+- [ ] JSON-only: reject non-application/json Content-Type/Accept.
+- [ ] No tokens, no remote admin, no rate-limits in v0.1.
+- [ ] Distinct admin mux; no admin routes on public mux.
+- [ ] Add admin listener to graceful shutdown.
+
+### Sprint 3: Datastore Creation and Basic Lifecycle
+- [ ] Default datastore: modernc.org/sqlite (portable).
+- [ ] Define storage interfaces ("Goob contracts") so backends can be swapped later.
+- [ ] SQLite safe defaults: enable WAL, synchronous=NORMAL, foreign_keys=ON.
+- [ ] app db create — Create & initialize datastore with minimal schema (versioning/migration table).
+- [ ] Lifecycle: If store exists but wrong version/uninitialized (missing migrations table): log & serve installation app.
+- [ ] Installation app (stub): serve a simple static page, "Installation is in progress."
 - [ ] Health endpoints: /live (OK when process is up), /ready (OK only when store initialized and not in maintenance).
 - [ ] /version returns appVersion, schemaVersion, goVersion, buildDate.
+- [ ] Serve public/index.html when store is ready.
 
-### Admin Channel (portable, enforced local-only)
-[ ] Admin HTTP API on separate listener (--admin-port, default 8383).
-[ ] Always bind to loopback only (127.0.0.1, ::1); refuse non-loopback binds (hard error).
-[ ] JSON-only: reject non-application/json Content-Type/Accept.
-[ ] No tokens, no remote admin, no rate-limits in v0.1.
-[ ] Distinct admin mux; no admin routes on public mux.
-
-### Installation / Maintenance
-[ ] Installation app (stub): serve a simple static page, “Installation is in progress.”
+### Remaining Tasks (Post-Sprint 3)
+### Installation / Maintenance (Full Implementation)
 [ ] Maintenance mode (marker + restart):
 - [ ] CLI app server maintenance on|off → /admin/maintenance/on|off writes/removes marker file in store dir.
 - [ ] Require app server restart to apply.
 - [ ] On startup with marker: serve installation/maintenance app; admin API stays available.
 - [ ] In maintenance: public API 503 JSON or maintenance page; /ready not ready; /live OK; /admin/status shows mode: maintenance.
 
-### Admin Commands
+### Admin Commands (Full Set)
 #### DB
-[ ] app db create — Create & initialize datastore. Only command that does not use server routes.
 [ ] app db verify — Read-only integrity check via /admin/db/verify.
 
 #### Server
@@ -59,9 +60,8 @@
 [ ] JSON-only guard returns 415 with the shape above (admin and any JSON route).
 [ ] Public HTML routes return proper error pages where applicable.
 
-### Logging & Observability
-[ ] Goob logging contract; default to Go std logger.
-[ ] Log startup/shutdown, store checks, version mismatches, admin binds, maintenance toggles, admin command invocations.
+### Logging & Observability (Extended)
+[ ] Log version mismatches, admin binds, maintenance toggles, admin command invocations.
 
 ### Store Lifecycle / Boot Behavior (recap)
 [ ] Store path defaults to CWD for v0.1-alpha.
@@ -136,7 +136,4 @@
 ## v0.4 (RBAC, Richer Logging, Runtime Config)
 [ ] Do not allow runtime change of admin addr/port in v0.1 (requires restart).
 [ ] (Deferred) Metrics hooks: active sessions, pruned count, login/logout counters.
-[ ] Note on cookies & TLS behind reverse proxy; warn if Secure cookies aren’t in effect.
-
----
-Next: v0.2 will focus on front-end UX (login page, etc.).
+[ ] Note on cookies & TLS behind reverse proxy; warn if Secure cookies aren't in effect.
