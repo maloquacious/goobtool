@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	version       = semver.Version{Minor: 1, Patch: 1, PreRelease: "alpha", Build: semver.Commit()}
+	version       = semver.Version{Minor: 1, Patch: 2, PreRelease: "alpha", Build: semver.Commit()}
 	schemaVersion = "0.1"
 	buildDate     = ""
 )
@@ -28,6 +28,7 @@ var (
 var (
 	port       int
 	adminPort  int
+	adminHost  string
 	shutdownTO time.Duration
 	exitAfter  time.Duration
 	publicDir  string
@@ -52,6 +53,7 @@ func main() {
 	}
 	serveCmd.Flags().IntVar(&port, "port", 8080, "public HTTP port (HTML/HTMX)")
 	serveCmd.Flags().IntVar(&adminPort, "admin-port", 8383, "admin HTTP port (JSON, loopback only)")
+	serveCmd.Flags().StringVar(&adminHost, "admin-host", "127.0.0.1", "admin host (127.0.0.1 or ::1, loopback only)")
 	serveCmd.Flags().DurationVar(&exitAfter, "exit-after", 0, "optional runtime; if set, server exits after this duration (testing)")
 
 	// db command group
@@ -89,6 +91,8 @@ func runServe(cmd *cobra.Command, args []string) {
 	log.Info("starting Goobergine server version=%s schema=%s", version.String(), schemaVersion)
 
 	// Check for datastore existence
+	// NOTE: os.Exit is safe here - we're in initialization phase before any servers start.
+	// If startup sequence changes, verify no resources need cleanup before these exits.
 	storePath := store.GetStorePath()
 	exists, err := store.CheckExists(storePath)
 	if err != nil {
@@ -182,16 +186,37 @@ func runServe(cmd *cobra.Command, args []string) {
 
 	// HTTP servers
 	publicSrv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", port),
+		Addr:    net.JoinHostPort("", fmt.Sprintf("%d", port)),
 		Handler: publicMux,
 	}
 
-	// Bind admin to 127.0.0.1 only (loopback enforcement)
-	adminListener, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%d", adminPort))
+	// Validate admin host is loopback before binding
+	// NOTE: os.Exit is safe here - we're in initialization phase before any servers start.
+	// If startup sequence changes (e.g., open DB earlier), verify no resources need cleanup.
+	adminIP := net.ParseIP(adminHost)
+	if adminIP == nil || !adminIP.IsLoopback() {
+		log.Error("admin host must be loopback (127.0.0.1 or ::1), got: %s", adminHost)
+		os.Exit(1)
+	}
+
+	// Bind admin to loopback only (127.0.0.1 for IPv4, ::1 for IPv6)
+	adminAddr := net.JoinHostPort(adminHost, fmt.Sprintf("%d", adminPort))
+	adminListener, err := net.Listen("tcp", adminAddr)
 	if err != nil {
 		log.Error("admin listener bind failed (loopback only): %v", err)
 		os.Exit(1)
 	}
+
+	// Verify loopback-only binding (defense in depth)
+	if addr, ok := adminListener.Addr().(*net.TCPAddr); ok {
+		if !addr.IP.IsLoopback() {
+			log.Error("admin listener bound to non-loopback address: %s", addr.IP)
+			adminListener.Close()
+			os.Exit(1)
+		}
+		log.Info("admin listener verified on loopback: %s", addr.String())
+	}
+
 	adminSrv := &http.Server{
 		Handler: adminMux,
 	}

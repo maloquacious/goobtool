@@ -14,13 +14,13 @@
 - [x] Lifecycle: If no store: app serve exits with guidance ("Run: app db create").
 - [x] Logging & Observability: Goob logging contract; default to Go std logger. Log startup/shutdown, store checks.
 
-### Sprint 2: Admin Channel
-- [ ] Admin HTTP API on separate listener (--admin-port, default 8383).
-- [ ] Always bind to loopback only (127.0.0.1, ::1); refuse non-loopback binds (hard error).
-- [ ] JSON-only: reject non-application/json Content-Type/Accept.
-- [ ] No tokens, no remote admin, no rate-limits in v0.1.
-- [ ] Distinct admin mux; no admin routes on public mux.
-- [ ] Add admin listener to graceful shutdown.
+### Sprint 2: Admin Channel ✅
+- [x] Admin HTTP API on separate listener (--admin-port, default 8383).
+- [x] Always bind to loopback only (127.0.0.1, ::1); refuse non-loopback binds (hard error).
+- [x] JSON-only: reject non-application/json Content-Type/Accept.
+- [x] No tokens, no remote admin, no rate-limits in v0.1.
+- [x] Distinct admin mux; no admin routes on public mux.
+- [x] Add admin listener to graceful shutdown.
 
 ### Sprint 3: Datastore Creation and Basic Lifecycle
 - [ ] Default datastore: modernc.org/sqlite (portable).
