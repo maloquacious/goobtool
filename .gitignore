@@ -3,8 +3,12 @@
 *.gz
 *.tar
 *.tgz
+*.db
 
 .archive/
 .code/
 .idea/
 .vscode/
+
+dist/
+tmp/

@@ -5,14 +5,14 @@
 [ ] Keep v0 on modules (start at v0.1-alpha; avoid v1 semantics).
 [ ] Enforce JSON-only on admin APIs; public app returns HTML.
 
-### Sprint 1: Basic Serve Command with Lifecycle Checks
-- [ ] Single binary provides both the server and admin CLI (initially just serve).
-- [ ] Command: app serve --port 8080 (defaults: 8080).
-- [ ] Primary listener serves the web application (initially just exits if no datastore).
-- [ ] Graceful shutdown (allow SQLite flush/close) - --shutdown-timeout=15s default.
-- [ ] Timer flag to auto-shutdown for tests.
-- [ ] Lifecycle: If no store: app serve exits with guidance ("Run: app db create").
-- [ ] Logging & Observability: Goob logging contract; default to Go std logger. Log startup/shutdown, store checks.
+### Sprint 1: Basic Serve Command with Lifecycle Checks ✅
+- [x] Single binary provides both the server and admin CLI (initially just serve).
+- [x] Command: app serve --port 8080 (defaults: 8080).
+- [x] Primary listener serves the web application (initially just exits if no datastore).
+- [x] Graceful shutdown (allow SQLite flush/close) - --shutdown-timeout=15s default.
+- [x] Timer flag to auto-shutdown for tests.
+- [x] Lifecycle: If no store: app serve exits with guidance ("Run: app db create").
+- [x] Logging & Observability: Goob logging contract; default to Go std logger. Log startup/shutdown, store checks.
 
 ### Sprint 2: Admin Channel
 - [ ] Admin HTTP API on separate listener (--admin-port, default 8383).
