@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installation — Goobergine</title>
+  <link rel="stylesheet" href="https://unpkg.com/missing.css@1.1.1/dist/missing.min.css">
+  <style>
+    body { max-width: 60rem; margin: 2rem auto; }
+    .muted { opacity: 0.75; }
+    .card { padding: 1.5rem; border: 1px solid #ddd; border-radius: 12px; }
+    .warning { 
+      background-color: #fff3cd; 
+      border-color: #ffc107;
+      color: #856404;
+    }
+    .warning h2, .warning h3 {
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Goobergine Installation</h1>
+    <p class="muted">Database initialization required</p>
+  </header>
+
+  <main class="card warning">
+    <h2>⚠️ Installation in Progress</h2>
+    <p>The datastore is not properly initialized or requires an upgrade.</p>
+    
+    <h3>Possible Issues:</h3>
+    <ul>
+      <li>Database exists but schema is not initialized</li>
+      <li>Schema version mismatch (upgrade required)</li>
+    </ul>
+
+    <h3>Next Steps:</h3>
+    <ol>
+      <li>Check the server logs for specific error messages</li>
+      <li>Run database upgrade if needed: <code>app db upgrade</code></li>
+      <li>Or recreate the database: <code>app db create</code></li>
+      <li>Restart the server after resolving the issue</li>
+    </ol>
+
+    <p class="muted">
+      <small>The admin API remains available on the loopback interface for management operations.</small>
+    </p>
+  </main>
+
+  <footer class="muted">
+    <small>&copy; 2025 Goobergine</small>
+  </footer>
+</body>
+</html>

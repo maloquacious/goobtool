@@ -22,16 +22,16 @@
 - [x] Distinct admin mux; no admin routes on public mux.
 - [x] Add admin listener to graceful shutdown.
 
-### Sprint 3: Datastore Creation and Basic Lifecycle
-- [ ] Default datastore: modernc.org/sqlite (portable).
-- [ ] Define storage interfaces ("Goob contracts") so backends can be swapped later.
-- [ ] SQLite safe defaults: enable WAL, synchronous=NORMAL, foreign_keys=ON.
-- [ ] app db create — Create & initialize datastore with minimal schema (versioning/migration table).
-- [ ] Lifecycle: If store exists but wrong version/uninitialized (missing migrations table): log & serve installation app.
-- [ ] Installation app (stub): serve a simple static page, "Installation is in progress."
-- [ ] Health endpoints: /live (OK when process is up), /ready (OK only when store initialized and not in maintenance).
-- [ ] /version returns appVersion, schemaVersion, goVersion, buildDate.
-- [ ] Serve public/index.html when store is ready.
+### Sprint 3: Datastore Creation and Basic Lifecycle ✅
+- [x] Default datastore: modernc.org/sqlite (portable).
+- [x] Define storage interfaces ("Goob contracts") so backends can be swapped later.
+- [x] SQLite safe defaults: enable WAL, synchronous=NORMAL, foreign_keys=ON.
+- [x] app db create — Create & initialize datastore with minimal schema (versioning/migration table).
+- [x] Lifecycle: If store exists but wrong version/uninitialized (missing migrations table): log & serve installation app.
+- [x] Installation app (stub): serve a simple static page, "Installation is in progress."
+- [x] Health endpoints: /live (OK when process is up), /ready (OK only when store initialized and not in maintenance).
+- [x] /version returns appVersion, schemaVersion, goVersion, buildDate.
+- [x] Serve public/index.html when store is ready.
 
 ### Sprint 4: Admin Commands and Maintenance Mode
 - [ ] Maintenance mode (marker + restart):

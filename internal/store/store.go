@@ -32,3 +32,8 @@ func CheckExists(storePath string) (bool, error) {
 func GetStorePath() string {
 	return "."
 }
+
+// GetDBPath returns the full path to the database file.
+func GetDBPath(storePath string) string {
+	return filepath.Join(storePath, DefaultDBFile)
+}
