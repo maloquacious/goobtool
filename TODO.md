@@ -33,44 +33,34 @@
 - [ ] /version returns appVersion, schemaVersion, goVersion, buildDate.
 - [ ] Serve public/index.html when store is ready.
 
-### Remaining Tasks (Post-Sprint 3)
-### Installation / Maintenance (Full Implementation)
-[ ] Maintenance mode (marker + restart):
+### Sprint 4: Admin Commands and Maintenance Mode
+- [ ] Maintenance mode (marker + restart):
 - [ ] CLI app server maintenance on|off → /admin/maintenance/on|off writes/removes marker file in store dir.
 - [ ] Require app server restart to apply.
 - [ ] On startup with marker: serve installation/maintenance app; admin API stays available.
 - [ ] In maintenance: public API 503 JSON or maintenance page; /ready not ready; /live OK; /admin/status shows mode: maintenance.
-
-### Admin Commands (Full Set)
 #### DB
-[ ] app db verify — Read-only integrity check via /admin/db/verify.
-
+- [ ] app db verify — Read-only integrity check via /admin/db/verify.
 #### Server
-[ ] app server status — /admin/status (version, uptime, dbVersion, mode).
-[ ] app server shutdown — /admin/shutdown graceful stop.
-[ ] app server echo <text> — /admin/echo → { "echo": "<text>" }.
+- [ ] app server status — /admin/status (version, uptime, dbVersion, mode).
+- [ ] app server shutdown — /admin/shutdown graceful stop.
+- [ ] app server echo <text> — /admin/echo → { "echo": "<text>" }.
+- [ ] Store path defaults to CWD for v0.1-alpha.
+- [ ] Serve installation app if store mismatch/uninitialized.
+- [ ] Public readiness never reveals admin mode.
 
-### Configuration Model
-[ ] Persisted config table app_config(key, val, type, updated_at).
-[ ] Load order: defaults → persisted → flags/env at startup → one-time overrides via db create.
-[ ] Bootstrap overrides (subset): --session-idle, --session-abs, --session-cookie-name, --csrf-cookie-name.
+### Sprint 5: Configuration and Error Contracts
+- [ ] Persisted config table app_config(key, val, type, updated_at).
+- [ ] Load order: defaults → persisted → flags/env at startup → one-time overrides via db create.
+- [ ] Bootstrap overrides (subset): --session-idle, --session-abs, --session-cookie-name, --csrf-cookie-name.
+- [ ] Uniform error shape: { "error": "code", "message": "human text" } with stable codes (unauthorized, forbidden, not_ready, maintenance, etc.).
+- [ ] JSON-only guard returns 415 with the shape above (admin and any JSON route).
+- [ ] Public HTML routes return proper error pages where applicable.
 
-### Error & JSON Contract
-[ ] Uniform error shape: { "error": "code", "message": "human text" } with stable codes (unauthorized, forbidden, not_ready, maintenance, etc.).
-[ ] JSON-only guard returns 415 with the shape above (admin and any JSON route).
-[ ] Public HTML routes return proper error pages where applicable.
-
-### Logging & Observability (Extended)
-[ ] Log version mismatches, admin binds, maintenance toggles, admin command invocations.
-
-### Store Lifecycle / Boot Behavior (recap)
-[ ] Store path defaults to CWD for v0.1-alpha.
-[ ] Serve installation app if store mismatch/uninitialized.
-[ ] Public readiness never reveals admin mode.
-
-### Documentation
-[ ] SECURITY_CONSIDERATIONS.md: enforced loopback-only admin, JSON-only admin policy, install/maintenance behavior, SQLite pragmas, deferred hardening (UDS/pipes, rate limits, mTLS), misconfiguration blocks.
-[ ] Quickstart: app db create → app serve → admin CLI (status, echo, maintenance, restart).
+### Sprint 6: Observability and Documentation
+- [ ] Log version mismatches, admin binds, maintenance toggles, admin command invocations.
+- [ ] SECURITY_CONSIDERATIONS.md: enforced loopback-only admin, JSON-only admin policy, install/maintenance behavior, SQLite pragmas, deferred hardening (UDS/pipes, rate limits, mTLS), misconfiguration blocks.
+- [ ] Quickstart: app db create → app serve → admin CLI (status, echo, maintenance, restart).
 
 ---
 
